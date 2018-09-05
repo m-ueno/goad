@@ -19,14 +19,9 @@ import (
 	"github.com/goadapp/goad/api"
 )
 
-var port int
 var urlStr string
-var portStr string
 
 func TestMain(m *testing.M) {
-	port = 8080
-	urlStr = fmt.Sprintf("http://localhost:%d/", port)
-	portStr = fmt.Sprintf(":%d", port)
 	code := m.Run()
 	os.Exit(code)
 }
@@ -539,13 +534,17 @@ func (h *delayRequstHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *testServer) Start() {
-	listener, err := net.Listen("tcp", portStr)
+	listener, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		panic(err)
 	}
+
+	tcpAddr := listener.Addr().String() // e.g. "localhost:23456"
+	urlStr = "http://" + tcpAddr
+
 	s.Listener = listener
 	s.HTTPServer = http.Server{
-		Addr:    portStr,
+		Addr:    tcpAddr,
 		Handler: s.Handler,
 	}
 	s.wg.Add(1)
