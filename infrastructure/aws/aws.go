@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -67,8 +68,11 @@ func (infra *AwsInfrastructure) Receive(results chan *result.LambdaResults) {
 		if lambdaResults != nil {
 			for _, lambdaResult := range lambdaResults {
 
-				log.Printf("\n\n%#+v\n\n", lambdaResult)
-				log.Printf("\n\n%#+v\n\n", lambdaResult.HistogramSnapshot)
+				b, err := json.MarshalIndent(lambdaResult, "", "  ")
+				if err != nil {
+					log.Fatal("Fail to json")
+				}
+				_ = ioutil.WriteFile("aws.log", b, 0644)
 
 				lambdaAggregate := &data.Lambdas[lambdaResult.RunnerID]
 				result.AddResult(lambdaAggregate, lambdaResult)
