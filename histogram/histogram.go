@@ -39,6 +39,10 @@ func (h *Histogram) Export() *Snapshot {
 	return &Snapshot{snap}
 }
 
+func (h *Histogram) CumulativeDistribution() []hdrhistogram.Bracket {
+	return h.histogram.CumulativeDistribution()
+}
+
 // Snapshot represents exported histogram as slice
 type Snapshot struct {
 	snapshot *hdrhistogram.Snapshot
