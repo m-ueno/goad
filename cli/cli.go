@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"math"
 	"os"
 	"os/signal"
@@ -330,6 +331,15 @@ outer:
 			if firstTime && render {
 				clearLogo()
 				firstTime = false
+			}
+
+			b, err := json.MarshalIndent(currentResult, "", "  ")
+			if err != nil {
+				log.Fatal("Fail to marshalindent result")
+			}
+			err = ioutil.WriteFile("debug.txt", b, 0644)
+			if err != nil {
+				log.Fatal("Fail to debug print")
 			}
 
 			y := 3
