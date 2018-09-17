@@ -332,6 +332,15 @@ outer:
 				firstTime = false
 			}
 
+			/*
+				resultJSON, err := json.MarshalIndent(result, "", "  ")
+				if err != nil {
+					log.Fatal("Failed to mashal result at CLI")
+				}
+
+				log.Print(resultJSON)
+			*/
+
 			y := 3
 			totalReqs := 0
 			regionsData := currentResult.RegionsData()

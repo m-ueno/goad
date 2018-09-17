@@ -505,6 +505,11 @@ func (m *requestMetric) addRequest(r *requestResult) {
 		} else {
 			agg.Statuses[statusStr]++
 		}
+
+		err := m.histogram.RecordValue(r.ElapsedLastByte)
+		if err != nil {
+			log.Fatal("Failed to Histogram.RecordValue()")
+		}
 	}
 	m.aggregate()
 }
@@ -521,6 +526,7 @@ func (m *requestMetric) aggregate() {
 	if (agg.TimedOut + agg.ConnectionErrors) > int(m.requestCountSinceLastSend)/2 {
 		agg.FatalError = "Over 50% of requests failed, aborting"
 	}
+	agg.HistogramSnapshot = m.histogram.Export()
 }
 
 func (m *requestMetric) sendAggregatedResults(sender resultSender) {
