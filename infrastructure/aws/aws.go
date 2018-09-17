@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"time"
@@ -62,9 +63,13 @@ func (infra *AwsInfrastructure) Receive(results chan *result.LambdaResults) {
 
 	timeoutStart := time.Now()
 	for {
-		lambdaResults := adaptor.Receive()
+		lambdaResults := adaptor.Receive() // []*api.RunnerResult
 		if lambdaResults != nil {
 			for _, lambdaResult := range lambdaResults {
+
+				log.Printf("\n\n%#+v\n\n", lambdaResult)
+				log.Printf("\n\n%#+v\n\n", lambdaResult.HistogramSnapshot)
+
 				lambdaAggregate := &data.Lambdas[lambdaResult.RunnerID]
 				result.AddResult(lambdaAggregate, lambdaResult)
 				results <- data

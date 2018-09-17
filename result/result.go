@@ -158,6 +158,10 @@ func AddResult(data *AggData, result *api.RunnerResult) {
 	}
 	data.Finished = result.Finished
 	data.Region = result.Region
+
+	// h := histogram.Import(result.HistogramSnapshot)
+
+	// fmt.Printf("\n\nCDF:\n%s\n\n", h.CumulativeDistribution())
 }
 
 func addToTotalAverage(currentAvg, currentCount, addAvg, addCount int64) int64 {
