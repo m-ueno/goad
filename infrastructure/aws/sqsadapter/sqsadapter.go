@@ -3,6 +3,8 @@ package sqsadapter
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -99,9 +101,16 @@ func resultFromJSON(str string) (*api.RunnerResult, error) {
 
 func jsonFromResult(result api.RunnerResult) (string, error) {
 	data, jsonerr := json.Marshal(result)
+
+	err := ioutil.WriteFile("sendresult.json", data, 0644)
+	if err != nil {
+		log.Fatal("Fail to sendresult json")
+	}
+
 	if jsonerr != nil {
 		return "", jsonerr
 	}
+
 	return string(data), nil
 }
 
