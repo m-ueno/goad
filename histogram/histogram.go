@@ -43,6 +43,12 @@ func (h *Histogram) CumulativeDistribution() []hdrhistogram.Bracket {
 	return h.histogram.CumulativeDistribution()
 }
 
+// Merge merges `from` into receiver
+// returns dropped
+func (h *Histogram) Merge(from *Histogram) (dropped int64) {
+	return h.histogram.Merge(from.histogram)
+}
+
 // Snapshot represents exported histogram as slice
 type Snapshot struct {
 	snapshot *hdrhistogram.Snapshot
