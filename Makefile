@@ -31,19 +31,19 @@ GO-BUILD = go build $(LDFLAGS)
 # $(ZIP) command ignoring timestamps and using UTC timezone
 ZIP = TZ=UTC zip -jrX
 
-.PHONY: lambda bindata clean all-zip all linux32 linux64 osx64 win32 win64 deb32 deb64 rpm32 rpm64 rpm check fmt test install uninstall
+.PHONY: bindata clean all-zip all linux32 linux64 osx64 win32 win64 deb32 deb64 rpm32 rpm64 rpm check fmt test install uninstall
 
 all: osx64 linux32 linux64 win32 win64
 
 test: bindata
 	@go test $(TEST)
 
-lambda:
+data/lambda.zip: lambda/lambda.go
 	@GOOS=linux GOARCH=amd64 $(GO-BUILD) -o data/lambda/goad-lambda ./lambda
 	@find data/lambda -exec touch -t $(TIMESTAMP) {} \; # strip timestamp
 	@$(ZIP) data/lambda data/lambda
 
-bindata: lambda
+bindata: data/lambda.zip
 	@go get github.com/jteeuwen/go-bindata/...
 	@go-bindata -modtime $(TIMESTAMP) -nocompress -pkg infrastructure -o infrastructure/bindata.go data/lambda.zip
 
