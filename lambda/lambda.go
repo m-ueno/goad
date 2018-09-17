@@ -24,6 +24,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/aws/aws-sdk-go/service/lambda/lambdaiface"
 	"github.com/goadapp/goad/api"
+	"github.com/goadapp/goad/histogram"
 	"github.com/goadapp/goad/infrastructure/aws/sqsadapter"
 	"github.com/goadapp/goad/version"
 	"github.com/streadway/amqp"
@@ -457,6 +458,7 @@ type requestMetric struct {
 	timeToFirstTotal          int64
 	requestTimeTotal          int64
 	requestCountSinceLastSend int64
+	histogram                 *histogram.Histogram
 }
 
 type resultSender interface {
@@ -469,6 +471,7 @@ func NewRequestMetric(region string, runnerID int) *requestMetric {
 			Region:   region,
 			RunnerID: runnerID,
 		},
+		histogram: histogram.New(),
 	}
 	metric.resetAndKeepTotalReqs()
 	return metric
