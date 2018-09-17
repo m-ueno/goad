@@ -7,6 +7,7 @@ import (
 
 	"github.com/goadapp/goad/api"
 	"github.com/goadapp/goad/goad/util"
+	"github.com/goadapp/goad/histogram"
 )
 
 // AggData type
@@ -26,6 +27,7 @@ type AggData struct {
 	Region               string
 	FatalError           string
 	Finished             bool
+	HistogramSnapshot    *histogram.Snapshot
 }
 
 // LambdaResults type
