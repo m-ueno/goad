@@ -26,6 +26,12 @@ func (h *Histogram) RecordValue(v int64) error {
 	return h.histogram.RecordValue(v)
 }
 
+// Import return new Histogram
+func Import(s *Snapshot) *Histogram {
+	innerHist := hdrhistogram.Import(s.snapshot)
+	return &Histogram{innerHist}
+}
+
 // Export snapshot
 func (h *Histogram) Export() *Snapshot {
 	snap := h.histogram.Export()
