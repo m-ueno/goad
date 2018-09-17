@@ -21,6 +21,11 @@ func New() *Histogram {
 	return &Histogram{innerHist}
 }
 
+// RecordValue records the given value, return an error if the value is out of range
+func (h *Histogram) RecordValue(v int64) error {
+	return h.histogram.RecordValue(v)
+}
+
 // Export snapshot
 func (h *Histogram) Export() *Snapshot {
 	snap := h.histogram.Export()
