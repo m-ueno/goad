@@ -84,6 +84,8 @@ func SetupRegionsAggData(lambdaCount int) *LambdaResults {
 }
 
 func sumAggData(dataArray []AggData) AggData {
+	aggHist := histogram.New()
+
 	sum := AggData{
 		Fastest:  math.MaxInt64,
 		Statuses: make(map[string]int),
@@ -113,9 +115,13 @@ func sumAggData(dataArray []AggData) AggData {
 		sum.TotalReqs += lambda.TotalReqs
 		sum.TotalTimedOut += lambda.TotalTimedOut
 		sum.TotBytesRead += lambda.TotBytesRead
+
+		histPerLambda := histogram.Import(sum.HistogramSnapshot)
+		aggHist.Merge(histPerLambda)
 	}
 	sum.AveTimeForReq = sum.AveTimeForReq / int64(len(dataArray))
 	sum.AveTimeToFirst = sum.AveTimeToFirst / int64(len(dataArray))
+	sum.HistogramSnapshot = aggHist.Export()
 	return sum
 }
 
@@ -159,9 +165,15 @@ func AddResult(data *AggData, result *api.RunnerResult) {
 	data.Finished = result.Finished
 	data.Region = result.Region
 
-	// h := histogram.Import(result.HistogramSnapshot)
+	if data.HistogramSnapshot == nil {
+		data.HistogramSnapshot = histogram.New().Export()
+	}
 
-	// fmt.Printf("\n\nCDF:\n%s\n\n", h.CumulativeDistribution())
+	// too ugly
+	histAggregated := histogram.Import(data.HistogramSnapshot)
+	histToAggregate := histogram.Import(result.HistogramSnapshot)
+	histAggregated.Merge(histToAggregate)
+	data.HistogramSnapshot = histAggregated.Export()
 }
 
 func addToTotalAverage(currentAvg, currentCount, addAvg, addCount int64) int64 {
