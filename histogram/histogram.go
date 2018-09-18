@@ -54,6 +54,10 @@ type Snapshot struct {
 	snapshot *hdrhistogram.Snapshot
 }
 
+func (s *Snapshot) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.snapshot)
+}
+
 func (s *Snapshot) String() string {
 	js, err := json.Marshal(s)
 	if err != nil {
