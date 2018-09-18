@@ -112,6 +112,9 @@ func (adaptor Adapter) SendResult(result api.RunnerResult) error {
 		fmt.Println(jsonerr)
 		panic(jsonerr)
 	}
+
+	fmt.Printf("** json to send: %s\n", str)
+
 	params := &sqs.SendMessageInput{
 		MessageBody:            aws.String(str),
 		MessageGroupId:         aws.String("goad-lambda"),
