@@ -10,7 +10,24 @@ import (
 	"github.com/goadapp/goad/histogram"
 )
 
+// Results provides access to set of runner result
+// Cacluration will occur only at local
+// [Lambda+Lambda] + [Lambda+Lambda] + [Lambda+Lambda] = Tot
+// lambda --> SQS: api.RunnerResult
+// SQS --> aws.Receive() : []api.RunnerResult まとめて受け取る
+// aws.Receive --> resultChan: api.LambdaResults 集約
+
+type LambdaResultsStore interface {
+	// Lambdas() []AggData
+	RegionsData() map[string]AggData
+	ResultsForRegion(region string) []AggData
+	Regions() []string
+	SumAllLambdas() AggData
+	AllLambdasFinished() bool
+}
+
 // AggData type
+// Need in cli
 type AggData struct {
 	TotalReqs            int
 	TotalTimedOut        int
@@ -126,6 +143,10 @@ func (r *LambdaResults) AllLambdasFinished() bool {
 		}
 	}
 	return true
+}
+
+func (data *AggData) AddResult(result *api.RunnerResult) {
+	AddResult(data, result)
 }
 
 func AddResult(data *AggData, result *api.RunnerResult) {
