@@ -1,9 +1,6 @@
 package histogram
 
 import (
-	"encoding/json"
-	"log"
-
 	"github.com/codahale/hdrhistogram"
 )
 
@@ -28,7 +25,7 @@ func (h *Histogram) RecordValue(v int64) error {
 
 // Import return new Histogram
 func Import(s *Snapshot) *Histogram {
-	innerHist := hdrhistogram.Import(s.snapshot)
+	innerHist := hdrhistogram.Import(s.Snapshot)
 	return &Histogram{innerHist}
 }
 
@@ -51,18 +48,5 @@ func (h *Histogram) Merge(from *Histogram) (dropped int64) {
 
 // Snapshot represents exported histogram as slice
 type Snapshot struct {
-	snapshot *hdrhistogram.Snapshot
-}
-
-func (s *Snapshot) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.snapshot)
-}
-
-func (s *Snapshot) String() string {
-	js, err := json.Marshal(s)
-	if err != nil {
-		log.Fatal("Failed to marshal hdr.Snapshot")
-	}
-
-	return string(js)
+	*hdrhistogram.Snapshot
 }
