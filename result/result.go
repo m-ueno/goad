@@ -44,7 +44,7 @@ type AggData struct {
 	Region               string
 	FatalError           string
 	Finished             bool
-	HistogramSnapshot    *histogram.Snapshot
+	*histogram.Snapshot
 }
 
 // LambdaResults type

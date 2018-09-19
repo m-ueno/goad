@@ -526,7 +526,7 @@ func (m *requestMetric) aggregate() {
 	if (agg.TimedOut + agg.ConnectionErrors) > int(m.requestCountSinceLastSend)/2 {
 		agg.FatalError = "Over 50% of requests failed, aborting"
 	}
-	agg.HistogramSnapshot = m.histogram.Export()
+	agg.Snapshot = m.histogram.Export()
 }
 
 func (m *requestMetric) sendAggregatedResults(sender resultSender) {
