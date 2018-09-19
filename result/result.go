@@ -1,7 +1,9 @@
 package result
 
 import (
+	"fmt"
 	"math"
+	"os"
 	"sort"
 	"time"
 
@@ -179,6 +181,8 @@ func AddResult(data *AggData, result *api.RunnerResult) {
 	}
 	data.Finished = result.Finished
 	data.Region = result.Region
+
+	fmt.Fprintf(os.Stderr, "adding result.snap %+v\n", *result.Snapshot)
 }
 
 func addToTotalAverage(currentAvg, currentCount, addAvg, addCount int64) int64 {
