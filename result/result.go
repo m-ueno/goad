@@ -71,7 +71,7 @@ func (r *LambdaResults) ResultsForRegion(region string) []AggData {
 	return lambdasOfRegion
 }
 
-func SetupRegionsAggData(lambdaCount int) *LambdaResults {
+func NewLambdaResults(lambdaCount int) *LambdaResults {
 	lambdaResults := &LambdaResults{
 		Lambdas: make([]AggData, lambdaCount),
 	}

@@ -57,7 +57,7 @@ func (infra *AwsInfrastructure) GetQueueURL() string {
 
 func (infra *AwsInfrastructure) Receive(results chan *result.LambdaResults) {
 	defer close(results)
-	data := result.SetupRegionsAggData(infra.config.Lambdas)
+	data := result.NewLambdaResults(infra.config.Lambdas)
 	adaptor := sqsadapter.New(infra.awsConfig, infra.GetQueueURL())
 
 	timeoutStart := time.Now()

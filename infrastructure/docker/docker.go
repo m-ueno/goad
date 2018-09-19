@@ -226,7 +226,7 @@ func (i *dockerInfrastructure) GetQueueURL() string {
 func (i *dockerInfrastructure) Receive(results chan *result.LambdaResults) {
 	defer close(results)
 	fmt.Println("RECEIVING DOCKER")
-	data := result.SetupRegionsAggData(i.config.Lambdas)
+	data := result.NewLambdaResults(i.config.Lambdas)
 
 	// log.Printf("trying to connecto to: %s", queueURL)
 	conn, err := amqp.Dial(i.GetQueueURL())
